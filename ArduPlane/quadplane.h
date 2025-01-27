@@ -579,6 +579,9 @@ private:
     // set altitude target to current altitude
     void set_alt_target_current(void);
 
+    //MDAR variables
+    AP_Int8 mdar_angle;
+
     // additional options
     AP_Int32 options;
     enum class OPTION {

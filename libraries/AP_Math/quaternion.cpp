@@ -379,6 +379,22 @@ void QuaternionT<T>::from_rotation(enum Rotation rotation)
         q3 = q4 = 0.0;
         return;
 
+    case ROTATION_PITCH_35:
+        q1 = 0.95371691f;
+        q2 = q4 = 0;
+        q3 = 0.30070592f;
+        return;
+    case ROTATION_PITCH_40:
+        q1 = 0.93969256f;
+        q2 = q4 = 0;
+        q3 = 0.34202028f;
+        return;
+    case ROTATION_PITCH_45:
+        q1 = 0.92387946f;
+        q2 = q4 = 0;
+        q3 = 0.38268358f;
+        return;
+
     case ROTATION_CUSTOM_1:
     case ROTATION_CUSTOM_2:
 #if AP_CUSTOMROTATIONS_ENABLED

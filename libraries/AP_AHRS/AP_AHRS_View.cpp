@@ -36,6 +36,18 @@ AP_AHRS_View::AP_AHRS_View(AP_AHRS &_ahrs, enum Rotation _rotation, float pitch_
         y_angle =  270;
         break;
     default:
+    //MDAR ANGLES
+    case ROTATION_PITCH_35:
+        y_angle = 35;
+        break;
+    case ROTATION_PITCH_40:
+        y_angle = 40;
+        break;
+    case ROTATION_PITCH_45:
+        y_angle = 45;
+        break;
+    //MDAR ANGLES
+
         AP_HAL::panic("Unsupported AHRS view %u", (unsigned)rotation);
     }
 

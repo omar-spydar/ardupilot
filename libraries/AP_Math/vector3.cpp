@@ -257,6 +257,33 @@ void Vector3<T>::rotate(enum Rotation rotation)
         y = tmp;
         return;
     }
+    case ROTATION_PITCH_35: {
+        const float sin_pitch = 0.57357643f; // sinf(pitch);
+        const float cos_pitch = 0.81915204f; //cosf(pitch);
+        float tmpx = x;
+        float tmpz = z;
+        x =  cos_pitch * tmpx + sin_pitch * tmpz;
+        z = -sin_pitch * tmpx + cos_pitch * tmpz;
+        return;
+    }
+    case ROTATION_PITCH_40: {
+        const float sin_pitch = 0.642787609f; // sinf(pitch);
+        const float cos_pitch = 0.766044443f; //cosf(pitch);
+        float tmpx = x;
+        float tmpz = z;
+        x =  cos_pitch * tmpx + sin_pitch * tmpz;
+        z = -sin_pitch * tmpx + cos_pitch * tmpz;
+        return;
+    }
+      case ROTATION_PITCH_45: {
+        const float sin_pitch = 0.7071067811865475f; // sinf(pitch);
+        const float cos_pitch = 0.7071067811865475f; //cosf(pitch);
+        float tmpx = x;
+        float tmpz = z;
+        x =  cos_pitch * tmpx + sin_pitch * tmpz;
+        z = -sin_pitch * tmpx + cos_pitch * tmpz;
+        return;
+    }
     case ROTATION_CUSTOM_1:
     case ROTATION_CUSTOM_2:
 #if AP_CUSTOMROTATIONS_ENABLED

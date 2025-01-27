@@ -92,6 +92,9 @@
 #ifndef AP_MOTORS_FRAME_OCTAQUAD_ENABLED
 #define AP_MOTORS_FRAME_OCTAQUAD_ENABLED AP_MOTORS_FRAME_DEFAULT_ENABLED
 #endif
+#ifndef AP_MOTORS_FRAME_MDAR_ENABLED // ENABLE MDAR FRAME 
+#define AP_MOTORS_FRAME_MDAR_ENABLED AP_MOTORS_FRAME_DEFAULT_ENABLED
+#endif
 
 // motor update rate
 #define AP_MOTORS_SPEED_DEFAULT     490 // default output rate to the motors
@@ -119,6 +122,7 @@ public:
         MOTOR_FRAME_SCRIPTING_MATRIX = 15,
         MOTOR_FRAME_6DOF_SCRIPTING = 16,
         MOTOR_FRAME_DYNAMIC_SCRIPTING_MATRIX = 17,
+        MOTOR_FRAME_SPYDAR_MDAR = 18, //MDAR frame class
     };
 
     // return string corresponding to frame_class
@@ -142,6 +146,8 @@ public:
         MOTOR_FRAME_TYPE_NYT_X = 17, // X frame, no differential torque for yaw
         MOTOR_FRAME_TYPE_BF_X_REV = 18, // X frame, betaflight ordering, reversed motors
         MOTOR_FRAME_TYPE_Y4 = 19, //Y4 Quadrotor frame
+        MOTOR_FRAME_TYPE_MDAR_8 = 22,  // MDAR 8 configuration for Spydar Sensors MDAR Pylon equiped vehicles
+        MOTOR_FRAME_TYPE_WYVERN_6 = 23, // MDAR 8 configuration for Spydar Sensors Wyvern Platform
     };
 
 

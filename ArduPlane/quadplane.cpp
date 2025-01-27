@@ -546,6 +546,14 @@ const AP_Param::GroupInfo QuadPlane::var_info2[] = {
     // @Increment: 1
     // @User: Standard
     AP_GROUPINFO("APPROACH_DIST", 39, QuadPlane, approach_distance, 0),
+
+    // @Param: MDAR_ANGLE
+    // @DisplayName: MDAR pitch Angle
+    // @Description: sets the angle of the MDAR ducts for SpyDar Sensors MDAR platform
+    // @Units: degrees
+    // @Range: 35 45
+    // @User: Standard
+    AP_GROUPINFO("MDAR_ANGLE", 62, QuadPlane, mdar_angle,  30),
     
     AP_GROUPEND
 };
@@ -661,11 +669,15 @@ bool QuadPlane::setup(void)
         AP_BoardConfig::config_error("Not enough memory for quadplane");
     }
 
+    enum Rotation rotation = ROTATION_NONE;   //for MDAR this is set to something other than ROTATION_NONE
     /*
       dynamically allocate the key objects for quadplane. This ensures
       that the objects don't affect the vehicle unless enabled and
       also saves memory when not in use
      */
+    
+    // GET FRAME MDAR FRAME TYPE MDARR_8 or WYVERN_6
+    enum AP_Motors::motor_frame_type motor_type = (enum AP_Motors::motor_frame_type)frame_type.get(); //needed for MDAR
     switch ((AP_Motors::motor_frame_class)frame_class) {
     case AP_Motors::MOTOR_FRAME_QUAD:
         setup_default_channels(4);
@@ -694,6 +706,18 @@ bool QuadPlane::setup(void)
     case AP_Motors::MOTOR_FRAME_SCRIPTING_MATRIX:
     case AP_Motors::MOTOR_FRAME_DYNAMIC_SCRIPTING_MATRIX:
         break;
+    case AP_Motors::MOTOR_FRAME_SPYDAR_MDAR:
+        switch (motor_type){
+        case AP_Motors::motor_frame_type::MOTOR_FRAME_TYPE_MDAR_8:
+            setup_default_channels(8);
+            break;
+        case AP_Motors::motor_frame_type::MOTOR_FRAME_TYPE_WYVERN_6:
+            setup_default_channels(8);
+            break;
+        default:
+             AP_BoardConfig::config_error("Frame not Supported under Spydar Sensors MDAR %u", (unsigned)frame_class.get());
+        }
+        break;
     default:
         AP_BoardConfig::config_error("Unsupported Q_FRAME_CLASS %u", (unsigned int)(frame_class.get()));
     }
@@ -720,6 +744,31 @@ bool QuadPlane::setup(void)
             motors_var_info = AP_MotorsMatrix_Scripting_Dynamic::var_info;
 #endif // AP_SCRIPTING_ENABLED
             break;
+    case AP_Motors::MOTOR_FRAME_SPYDAR_MDAR:
+        // Original Code for MDAR AP_MotorsMatrix took 2 arguments
+        // motors = new AP_MotorsMatrix(plane.scheduler.get_loop_rate_hz(), rc_speed);
+        
+        // Ardupilot Update AP_MotorsMatrix takes 1 argument 
+        // motors = NEW_NOTHROW AP_MotorsMatrix(rc_speed);
+        motors = NEW_NOTHROW AP_MotorsMatrix(plane.scheduler.get_loop_rate_hz());
+        motors_var_info = AP_MotorsMatrix::var_info;
+        gcs().send_text(MAV_SEVERITY_INFO, "Warning: USING MDAR FRAME");
+        rotation = ROTATION_NONE;
+        switch (mdar_angle){
+        case 35:
+            rotation = ROTATION_PITCH_35;
+            break;
+        case 40:
+            rotation = ROTATION_PITCH_40;
+            break;
+        case 45:
+            rotation = ROTATION_PITCH_45;
+            break;
+        default: 
+            rotation = ROTATION_NONE;
+            break;  
+        }
+        break;
     default:
         motors = NEW_NOTHROW AP_MotorsMatrix(rc_speed);
         motors_var_info = AP_MotorsMatrix::var_info;
@@ -733,7 +782,9 @@ bool QuadPlane::setup(void)
     AP_Param::load_object_from_eeprom(motors, motors_var_info);
 
     // create the attitude view used by the VTOL code
-    ahrs_view = ahrs.create_view((tailsitter.enable > 0) ? ROTATION_PITCH_90 : ROTATION_NONE, ahrs_trim_pitch);
+    // ahrs_view = ahrs.create_view((tailsitter.enable > 0) ? ROTATION_PITCH_90 : ROTATION_NONE, ahrs_trim_pitch);
+    // include MDAR Rotations
+    ahrs_view = ahrs.create_view((tailsitter.enable > 0) ? ROTATION_PITCH_90 : rotation, ahrs_trim_pitch);
     if (ahrs_view == nullptr) {
         AP_BoardConfig::allocation_error("ahrs_view");
     }

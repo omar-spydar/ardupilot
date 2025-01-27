@@ -1240,6 +1240,44 @@ bool AP_MotorsMatrix::setup_deca_matrix(motor_frame_type frame_type)
     return true;
 }
 #endif // AP_MOTORS_FRAME_DECA_ENABLED
+#if AP_MOTORS_FRAME_MDAR_ENABLED // SPYDAR MDAR FRAME CLASS
+bool AP_MotorsMatrix::setup_spydar_matrix(motor_frame_type frame_type)
+{
+    _mav_type = MAV_TYPE_FIXED_WING;
+    _frame_class_string = "MDAR";
+    switch(frame_type){
+    case MOTOR_FRAME_TYPE_MDAR_8:{
+        _frame_type_string = "MDAR8";
+        add_motor(AP_MOTORS_MOT_1,   45, AP_MOTORS_MATRIX_YAW_FACTOR_CW,  1);
+        add_motor(AP_MOTORS_MOT_2, -135, AP_MOTORS_MATRIX_YAW_FACTOR_CW,  3);
+        add_motor(AP_MOTORS_MOT_3,  -45, AP_MOTORS_MATRIX_YAW_FACTOR_CCW, 4);
+        add_motor(AP_MOTORS_MOT_4,  135, AP_MOTORS_MATRIX_YAW_FACTOR_CCW, 2);
+        add_motor_raw(AP_MOTORS_MOT_5, 0.0,0.0,0.0, 5);
+        add_motor_raw(AP_MOTORS_MOT_6, 0.0,0.0,0.0, 7);
+        add_motor_raw(AP_MOTORS_MOT_7, 0.0,0.0,0.0, 8);
+        add_motor_raw(AP_MOTORS_MOT_8, 0.0,0.0,0.0, 6);
+        break;
+        }
+    case MOTOR_FRAME_TYPE_WYVERN_6:{
+        _frame_type_string = "MDAR6";
+        add_motor(AP_MOTORS_MOT_1,   45, AP_MOTORS_MATRIX_YAW_FACTOR_CCW,  1);
+        add_motor(AP_MOTORS_MOT_2, -135, AP_MOTORS_MATRIX_YAW_FACTOR_CCW,  3);
+        add_motor(AP_MOTORS_MOT_3,  -45, AP_MOTORS_MATRIX_YAW_FACTOR_CW, 4);
+        add_motor(AP_MOTORS_MOT_4,  135, AP_MOTORS_MATRIX_YAW_FACTOR_CW, 2);
+        add_motor_raw(AP_MOTORS_MOT_5, 0.0,0.0,0.0, 5);
+        add_motor_raw(AP_MOTORS_MOT_6, 0.0,0.0,0.0, 6);
+        add_motor_raw(AP_MOTORS_MOT_7, 0.0,0.0,0.0, 6);
+        add_motor_raw(AP_MOTORS_MOT_8, 0.0,0.0,0.0, 6);
+        break;
+        }
+    default:
+        // MDAR frame class does not support this frame type
+        return false;
+    }
+    return true;
+}
+// END SPYDAR MDAR FRAME CLASS
+#endif // AP_MOTORS_FRAME_MDAR_ENABLED
 
 void AP_MotorsMatrix::setup_motors(motor_frame_class frame_class, motor_frame_type frame_type)
 {
@@ -1286,6 +1324,12 @@ void AP_MotorsMatrix::setup_motors(motor_frame_class frame_class, motor_frame_ty
         success = setup_deca_matrix(frame_type);
         break;
 #endif //AP_MOTORS_FRAME_DECA_ENABLED
+    // SPYDAR MDAR FRAME CLASS
+#if AP_MOTORS_FRAME_MDAR_ENABLED
+    case MOTOR_FRAME_SPYDAR_MDAR:
+        success = setup_spydar_matrix(frame_type);
+        break;
+#endif //AP_MOTORS_FRAME_MDAR_ENABLED
     default:
         // matrix doesn't support the configured class
         success = false;
