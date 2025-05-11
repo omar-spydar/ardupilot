@@ -551,7 +551,7 @@ const AP_Param::GroupInfo QuadPlane::var_info2[] = {
     // @DisplayName: MDAR pitch Angle
     // @Description: sets the angle of the MDAR ducts for SpyDar Sensors MDAR platform
     // @Units: degrees
-    // @Range: 35 45
+    // @Range: 15 35 45
     // @User: Standard
     AP_GROUPINFO("MDAR_ANGLE", 62, QuadPlane, mdar_angle,  30),
     
@@ -755,6 +755,9 @@ bool QuadPlane::setup(void)
         gcs().send_text(MAV_SEVERITY_INFO, "Warning: USING MDAR FRAME");
         rotation = ROTATION_NONE;
         switch (mdar_angle){
+        case 15:
+            rotation = ROTATION_PITCH_15;
+            break;
         case 35:
             rotation = ROTATION_PITCH_35;
             break;

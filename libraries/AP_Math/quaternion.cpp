@@ -379,6 +379,12 @@ void QuaternionT<T>::from_rotation(enum Rotation rotation)
         q3 = q4 = 0.0;
         return;
 
+        case ROTATION_PITCH_15:
+        q1 = 0.9914f;
+        q2 = q4 = 0;
+        q3 = 0.1305f;
+        return;
+
     case ROTATION_PITCH_35:
         q1 = 0.95371691f;
         q2 = q4 = 0;

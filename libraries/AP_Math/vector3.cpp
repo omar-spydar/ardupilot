@@ -257,6 +257,18 @@ void Vector3<T>::rotate(enum Rotation rotation)
         y = tmp;
         return;
     }
+    // MDAR SUPPORT ANGLES
+
+    case ROTATION_PITCH_15: {
+        const float sin_pitch = 0.2588190451025207f; // sinf(pitch);
+        const float cos_pitch = 0.9659258262890682f; //cosf(pitch);
+        float tmpx = x;
+        float tmpz = z;
+        x =  cos_pitch * tmpx + sin_pitch * tmpz;
+        z = -sin_pitch * tmpx + cos_pitch * tmpz;
+        return;
+    }
+
     case ROTATION_PITCH_35: {
         const float sin_pitch = 0.57357643f; // sinf(pitch);
         const float cos_pitch = 0.81915204f; //cosf(pitch);
@@ -284,6 +296,8 @@ void Vector3<T>::rotate(enum Rotation rotation)
         z = -sin_pitch * tmpx + cos_pitch * tmpz;
         return;
     }
+
+    // END MDAR SUPPORT ANGLES
     case ROTATION_CUSTOM_1:
     case ROTATION_CUSTOM_2:
 #if AP_CUSTOMROTATIONS_ENABLED

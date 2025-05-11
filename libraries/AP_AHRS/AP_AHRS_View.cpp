@@ -37,6 +37,9 @@ AP_AHRS_View::AP_AHRS_View(AP_AHRS &_ahrs, enum Rotation _rotation, float pitch_
         break;
     default:
     //MDAR ANGLES
+    case ROTATION_PITCH_15:
+        y_angle = 15;
+        break;
     case ROTATION_PITCH_35:
         y_angle = 35;
         break;
